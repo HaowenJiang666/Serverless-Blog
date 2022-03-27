@@ -1,0 +1,38 @@
+.list{
+    margin: 0;
+    padding: 0 0 10px 0; // modify the bottom interval
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    .item{
+        width: 50%;// modify the interval of the list
+        margin-top: 10px;
+        .img{// can choose to fix all the propotion of the imgs
+            display: block;
+            margin: 0 auto;
+        }
+        .title{// modify the title 
+            overflow: hidden;
+            margin: 0;
+            padding: 0 10px;
+            line-height: 32px;
+            font-size: 16px;
+            font-weight: normal;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .desc{// modify the desc
+            overflow: hidden;
+            margin: 0;
+            padding: 0 10px;
+            line-height: 24px;
+            font-size: 14px;
+            font-weight: normal;
+            color: #777;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3; // over n lines, will not be displayed
+        }
+    }
+}

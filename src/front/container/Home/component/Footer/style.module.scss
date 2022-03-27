@@ -1,0 +1,15 @@
+.footer{
+    height: 60px; // modify the size of the frame (including title, description, avatar...)
+
+    background: #FFF;;
+    .list{
+        list-style-type: None;
+        .item{
+            line-height: 60px;
+            .link{
+                color: cornflowerblue;
+                text-decoration: none;
+            }
+        }
+    }
+}

@@ -1,0 +1,27 @@
+.sidebar{
+    padding: 10px 0; // modify the interval of sidebars
+    :global(.iconfont){
+        margin-right: 10px; // modify the interval of the icon and text
+    }
+}
+
+.header{
+    padding: 0 20px;
+    :global(.iconfont){
+        margin-right: 10px; // modify the interval of the icon and text
+        color: #FFF;
+        cursor: pointer;
+    }
+}
+
+.content{
+    padding: 24px;
+    min-height: 1000px;
+}
+
+.save{
+    padding-top: 20px;
+    border-top: 1px dashed #CCC;
+    margin: 10px auto;
+    text-align: center;
+}

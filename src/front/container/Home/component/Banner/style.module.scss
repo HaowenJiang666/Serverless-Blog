@@ -1,0 +1,36 @@
+.banner{
+    position: relative;
+    height: 800px; // modify the size of the frame (including title, description, avatar...)
+    background-image: url('https://serverless-project-static-files-2.oss-us-west-1.aliyuncs.com/images/bg.jpeg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    .person {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 160px;
+        .avatar {
+            position: absolute;
+            top: -130px;
+            left: 50px;
+            width: 280px;
+            height: 280px;
+            border-radius: 20px;
+        }
+        .title {
+            line-height: 50px;
+            margin-top: 10px;
+            margin-left: 380px;
+            font-size: 28px;
+            color: #000;
+        }
+        .description {
+            line-height: 32px;// line height of description
+            margin-right: 30px;
+            margin-left: 380px;
+            font-size: 18px;
+            color: #333;
+        }
+    }
+}
