@@ -1,15 +1,31 @@
-import { useState, useImperativeHandle, forwardRef } from 'react';
+import { useState, useEffect, useImperativeHandle, forwardRef, createRef, useMemo } from 'react';
 import { Button } from 'antd';
+import { ReactSortable } from "react-sortablejs";
 import AreaItem from '../AreaItem';
 import styles from './style.module.scss'
 
+let refs = [];
 
 const AreaList = (props, ref) => {
     const [ children, setChildren ] = useState(props.children);
 
+    useEffect(() => {
+        setChildren(props.children)
+    }, [props.children])
+
+    useMemo(() => {
+        refs = children.map(item => createRef());
+    }, [children]);
+
     const addItemToChildren = () => {
         const newChildren = [...children];
         newChildren.push({});
+        setChildren(newChildren);
+    }
+
+    const changeAreaItem = (index, item) => {
+        const newChildren = [...children];
+        newChildren.splice(index, 1, item);
         setChildren(newChildren);
     }
 
@@ -20,17 +36,35 @@ const AreaList = (props, ref) => {
     }
 
     useImperativeHandle(ref, () => {
-        return { children };
+        return {
+            getSchema: () => {
+                const schema = []
+                children.forEach((item, index) => {
+                    schema.push(refs[index].current.getSchema());
+                });
+                return schema;
+            },
+        };
     });
 
     return  (
         <div>
             <ul className={styles.list}>
-                {
-                    children.map((item, index) => (
-                        <AreaItem key={index} index={index} removeItemFromChildren={removeItemFromChildren}/>
-                    ))
-                }
+                <ReactSortable list={children} setList={setChildren}>
+                    {
+                        children.map((item, index) => (
+                            <AreaItem 
+                            key={index} 
+                            index={index} 
+                            item={item}
+                            removeItemFromChildren={removeItemFromChildren}
+                            changeAreaItem={changeAreaItem}
+                            ref={refs[index]}
+                            />
+                        ))
+                    }
+                </ReactSortable>
+                
             </ul>
             <Button type="primary" ghost onClick={addItemToChildren}>Add New Page Block</Button>
             

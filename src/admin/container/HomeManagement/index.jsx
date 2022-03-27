@@ -6,7 +6,7 @@ import styles from './style.module.scss'
 
 const { Header, Sider, Content } = Layout;
 
-const schema = parseJsonByString(window.localStorage.schema, {});
+const initialSchema = parseJsonByString(window.localStorage.schema, {});
 
 const useCollapsed = () => {
   const [ collapsed, setCollapsed ] = useState(false)
@@ -16,13 +16,19 @@ const useCollapsed = () => {
 
 const HomeManagement = () => {
   const { collapsed, toggleCollapsed } = useCollapsed();
+  const [ schema, setSchema ] = useState(initialSchema);
   const handleHomePageRedirect = () => {window.location.href = "/"}
   const areaListRef = useRef()
 
   const handleSaveBtnClick = () => {
-    const { children } = areaListRef.current;
-    const schema = { name: 'Page', attributes: {}, children }
+    const { getSchema } = areaListRef.current;
+    const schema = { name: 'Page', attributes: {}, children: getSchema() }
     window.localStorage.schema = JSON.stringify(schema);
+  }
+
+  const handleResetBtnClick = () => {
+     const newSchema = parseJsonByString(window.localStorage.schema, {});
+     setSchema(newSchema);
   }
 
   return (
@@ -50,8 +56,9 @@ const HomeManagement = () => {
         </Header>
         <Content className={styles.content}>
           <AreaList ref={areaListRef} children={schema.children || []}/>
-          <div className={styles.save}>
-            <Button type="primary" onClick={handleSaveBtnClick}>Save The Block Configuration</Button>
+          <div className={styles.buttons}>
+            <Button type="primary" onClick={handleSaveBtnClick}>Save Block Configuration</Button>
+            <Button type="primary" className={styles.reset} onClick={handleResetBtnClick}>Reset Block Configuration</Button>
           </div>
         </Content>
       </Layout>
