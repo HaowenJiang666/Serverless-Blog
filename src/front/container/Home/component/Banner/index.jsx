@@ -1,12 +1,10 @@
 import styles from './style.module.scss'
 import { parseJsonByString } from '../../../../../common/utils'
 
-const schema = parseJsonByString(window.localStorage?.schema, []);
-const bannerSchema = schema?.children?.[0] || {};
 
-const Banner = () => {
-  const title = bannerSchema?.attributes?.title || "Kevin's Personal Blog";
-  const description = bannerSchema?.attributes?.description || "This is the description area"
+const Banner = ({ schema }) => {
+  const title = schema?.attributes?.title || "Kevin's Personal Blog";
+  const description = schema?.attributes?.description || "This is the description area"
 
     return (
       <div className="wrapper">
