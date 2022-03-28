@@ -1,75 +1,40 @@
-import { useState, useEffect, useImperativeHandle, forwardRef, createRef, useMemo } from 'react';
 import { Button } from 'antd';
-import { ReactSortable } from "react-sortablejs";
+import { useSelector, useDispatch } from 'react-redux'; 
+import { SortableContainer } from 'react-sortable-hoc';
+import { getAddPageChildrenAction, getChangePageChildPositionAction } from '../../store/action';
 import AreaItem from '../AreaItem';
-import styles from './style.module.scss'
+import styles from './style.module.scss';
 
-let refs = [];
+const SortableList = SortableContainer(({ list }) => {
+    return (
+        <ul className={styles.list}>
+                {
+                    list.map((item, index) => (
+                        <AreaItem key={index} index={index} value={index}/>
+                ))}
+        </ul>
+    );
+  });
 
-const AreaList = (props, ref) => {
-    const [ children, setChildren ] = useState(props.children);
+const AreaList = () => {
+    
+    const dispatch = useDispatch();
+    const children = useSelector((state) => state.homeManagement.schema?.children || []);
 
-    useEffect(() => {
-        setChildren(props.children)
-    }, [props.children])
-
-    useMemo(() => {
-        refs = children.map(item => createRef());
-    }, [children]);
-
-    const addItemToChildren = () => {
-        const newChildren = [...children];
-        newChildren.push({});
-        setChildren(newChildren);
+    const addPageChildren = () => {
+        dispatch(getAddPageChildrenAction())
     }
 
-    const changeAreaItem = (index, item) => {
-        const newChildren = [...children];
-        newChildren.splice(index, 1, item);
-        setChildren(newChildren);
+    const onSortEnd = ({oldIndex, newIndex}) => {
+        dispatch(getChangePageChildPositionAction(oldIndex, newIndex));
     }
-
-    const removeItemFromChildren = (index) => {
-        const newChildren = [...children];
-        newChildren.splice(index, 1);
-        setChildren(newChildren);
-    }
-
-    useImperativeHandle(ref, () => {
-        return {
-            getSchema: () => {
-                const schema = []
-                children.forEach((item, index) => {
-                    schema.push(refs[index].current.getSchema());
-                });
-                return schema;
-            },
-        };
-    });
 
     return  (
         <div>
-            <ul className={styles.list}>
-                <ReactSortable list={children} setList={setChildren}>
-                    {
-                        children.map((item, index) => (
-                            <AreaItem 
-                            key={index} 
-                            index={index} 
-                            item={item}
-                            removeItemFromChildren={removeItemFromChildren}
-                            changeAreaItem={changeAreaItem}
-                            ref={refs[index]}
-                            />
-                        ))
-                    }
-                </ReactSortable>
-                
-            </ul>
-            <Button type="primary" ghost onClick={addItemToChildren}>Add New Page Block</Button>
-            
+            <SortableList distance={5} lockAxis="y" list={children} onSortEnd={onSortEnd}/>
+            <Button type="primary" ghost onClick={addPageChildren}>Add New Page Block</Button>          
         </div>
     );
 }
 
-export default forwardRef(AreaList);
+export default AreaList;

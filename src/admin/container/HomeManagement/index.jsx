@@ -1,12 +1,12 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Layout, Menu, Button } from 'antd';
-import AreaList from './component/AreaList';
 import { parseJsonByString } from '../../../common/utils'
+import AreaList from './component/AreaList';
 import styles from './style.module.scss'
+import { getChangeSchemaAction } from './store/action';
 
 const { Header, Sider, Content } = Layout;
-
-const initialSchema = parseJsonByString(window.localStorage.schema, {});
 
 const useCollapsed = () => {
   const [ collapsed, setCollapsed ] = useState(false)
@@ -14,21 +14,28 @@ const useCollapsed = () => {
   return { collapsed, toggleCollapsed}
 }
 
+const useStore = () => {
+  const dispatch = useDispatch();
+  const schema = useSelector((state) => state.homeManagement.schema)
+  const changeSchema = (schema) => {
+    dispatch(getChangeSchemaAction(schema));
+  }
+  return { schema, changeSchema }; 
+}
+
 const HomeManagement = () => {
   const { collapsed, toggleCollapsed } = useCollapsed();
-  const [ schema, setSchema ] = useState(initialSchema);
+  const { schema, changeSchema } = useStore();
+
   const handleHomePageRedirect = () => {window.location.href = "/"}
-  const areaListRef = useRef()
 
   const handleSaveBtnClick = () => {
-    const { getSchema } = areaListRef.current;
-    const schema = { name: 'Page', attributes: {}, children: getSchema() }
     window.localStorage.schema = JSON.stringify(schema);
   }
 
   const handleResetBtnClick = () => {
-     const newSchema = parseJsonByString(window.localStorage.schema, {});
-     setSchema(newSchema);
+    // action -> reducer -> redux change 
+     changeSchema(parseJsonByString(window.localStorage.schema, {})) 
   }
 
   return (
@@ -55,7 +62,7 @@ const HomeManagement = () => {
           }
         </Header>
         <Content className={styles.content}>
-          <AreaList ref={areaListRef} children={schema.children || []}/>
+          <AreaList />
           <div className={styles.buttons}>
             <Button type="primary" onClick={handleSaveBtnClick}>Save Block Configuration</Button>
             <Button type="primary" className={styles.reset} onClick={handleResetBtnClick}>Reset Block Configuration</Button>

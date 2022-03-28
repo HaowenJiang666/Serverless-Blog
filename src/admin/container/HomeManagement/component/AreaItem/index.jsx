@@ -1,25 +1,27 @@
-import { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux'; 
 import { Button, Modal, Select } from 'antd';
+import { SortableElement } from 'react-sortable-hoc';
+import { getChangePageChildAction, getDeletePageChildAction } from '../../store/action';
 import styles from './style.module.scss';
 
 const { Option } = Select;
 
-const AreaItem = (props, ref) => {
-    const { index, item, removeItemFromChildren, changeAreaItem } = props // get the properties from AreaList
+const useStore = (index) => {
+    const dispatch = useDispatch();
+    const pageChild = useSelector((state) => state.homeManagement.schema.children?.[index] || []);
+    const changePageChild = (temp) => { dispatch(getChangePageChildAction(index, temp)) }
+    const removePageChild = () => { dispatch(getDeletePageChildAction(index)) }
+    return { pageChild, changePageChild , removePageChild}; 
+  }
+
+const AreaItem = (props) => {
+    const { value: index } = props // get the properties from AreaList
+    const { pageChild, changePageChild, removePageChild } = useStore(index)
+
     const [ isModalVisible, setIsModalVisible ] = useState(false);
-    const [ schema, setSchema ] = useState(item);
-    const [ temp, setTemp ] = useState(item);
+    const [ tempPageChild, setTempPageChild ] = useState(pageChild);
 
-    useEffect(() => {
-        setSchema(props.item);
-        setTemp(props.item);
-    }, [props.item])
-
-    useImperativeHandle(ref, () => {
-        return {
-            getSchema: () => { return schema; },
-        };
-    });
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -27,18 +29,17 @@ const AreaItem = (props, ref) => {
 
     const handleModalOk = () => {
         setIsModalVisible(false);
-        setSchema(temp);
-        changeAreaItem(index, temp)
+        changePageChild(tempPageChild);
+        
     };
     
     const handleModalCancel = () => {
         setIsModalVisible(false);
-        setTemp(schema);
+        setTempPageChild(pageChild);
     };
 
     const handleSelectChange = (value) => {
-        const newSchema = { name: value, attributes: {}, children: [] };
-        setTemp(newSchema);
+        setTempPageChild({ name: value, attributes: {}, children: [] });
     }
 
     return (
@@ -46,15 +47,12 @@ const AreaItem = (props, ref) => {
             <span 
             className={styles.content} 
             onClick={showModal}
-            >{schema.name ? schema.name + ' Component' : "Current block's content is empty" }</span>
+            >{pageChild.name ? pageChild.name + ' Component' : "Current block's content is empty" }</span>
             <span className={styles.delete}>
-                <Button 
-                onClick={ () => removeItemFromChildren(index)} 
-                size="small" type="dashed" danger
-                >Delete</Button>
+                <Button onClick={removePageChild} size="small" type="dashed" danger>Delete</Button>
             </span>
             <Modal title="Select Component" visible={isModalVisible} onOk={handleModalOk} onCancel={handleModalCancel}>
-                <Select value={temp.name} className={styles.selector} style={{width: '100%'}} onChange={handleSelectChange}>
+                <Select value={tempPageChild.name} className={styles.selector} style={{width: '100%'}} onChange={handleSelectChange}>
                     <Option value='Banner'>Banner Component</Option>
                     <Option value='List'>List Component</Option>
                     <Option value='Footer'>Footer Component</Option>
@@ -64,4 +62,4 @@ const AreaItem = (props, ref) => {
     )
 }
 
-export default forwardRef(AreaItem);
+export default SortableElement(AreaItem);
