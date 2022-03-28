@@ -5,7 +5,14 @@ Schema Design 2.0 :
     children: [
         {
             name: 'Banner',
-            attributes: {}
+            attributes: {
+                title:
+                description:
+                showSmallPic:
+                smallPicUrl:
+                backgroundUrl:
+                backgroundHeight:
+            }
             children: []
         },{
             name: 'List',

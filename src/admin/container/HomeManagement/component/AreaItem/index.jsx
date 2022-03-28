@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; 
 import { Button, Modal, Select } from 'antd';
 import { SortableElement } from 'react-sortable-hoc';
+import { cloneDeep } from 'lodash'
 import { getChangePageChildAction, getDeletePageChildAction } from '../../store/action';
+import Banner from './component/Banner';
+import List from './component/List';
+import Footer from './component/Footer'
 import styles from './style.module.scss';
 
 const { Option } = Select;
+const map = { Banner, List, Footer }
 
 const useStore = (index) => {
     const dispatch = useDispatch();
@@ -22,6 +27,9 @@ const AreaItem = (props) => {
     const [ isModalVisible, setIsModalVisible ] = useState(false);
     const [ tempPageChild, setTempPageChild ] = useState(pageChild);
 
+    useEffect(() => {
+        setTempPageChild(pageChild);
+    }, [pageChild])
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -42,6 +50,20 @@ const AreaItem = (props) => {
         setTempPageChild({ name: value, attributes: {}, children: [] });
     }
 
+    const changeTempPageChildAttributes = (kvObj) => {
+        const newTempPageChild = cloneDeep(tempPageChild);
+        for(let key in kvObj) {
+            newTempPageChild.attributes[key] = kvObj[key];
+        }
+        setTempPageChild(newTempPageChild);
+    }
+
+    const getComponent = () => {
+        const { name } = tempPageChild;
+        const Component = map[name];
+        return Component ? <Component {...tempPageChild} changeAttributes={changeTempPageChildAttributes}/> : null;
+    }
+
     return (
         <li className={styles.item}>
             <span 
@@ -57,6 +79,7 @@ const AreaItem = (props) => {
                     <Option value='List'>List Component</Option>
                     <Option value='Footer'>Footer Component</Option>
                 </Select>
+                { getComponent() } 
             </Modal>
         </li>
     )

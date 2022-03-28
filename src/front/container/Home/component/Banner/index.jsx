@@ -1,22 +1,31 @@
 import styles from './style.module.scss'
-import { parseJsonByString } from '../../../../../common/utils'
 
 
 const Banner = ({ schema }) => {
-  const title = schema?.attributes?.title || "Kevin's Personal Blog";
-  const description = schema?.attributes?.description || "This is the description area"
+  const { attributes = {} } = schema;
+  const { 
+    title, description, showSmallPic, smallPicUrl, backgroundUrl, backgroundHeight
+  } = attributes;
 
-    return (
-      <div className="wrapper">
-        <div className={styles.banner}>
-          <div className={styles.person}>
-            <img className={styles.avatar} src="https://serverless-project-static-files-2.oss-us-west-1.aliyuncs.com/images/avatar.jpeg" alt="Kevin" />
+  const wrapperStyleObj = backgroundUrl ? { backgroundImage: `url('${backgroundUrl}')` } : {};
+  backgroundHeight && (wrapperStyleObj.height = parseInt(backgroundHeight, 10));
+  console.log(wrapperStyleObj)
+
+  return (
+    <div className="wrapper" >
+      <div className={styles.banner} style={wrapperStyleObj}>
+        <div className={styles.person}>
+          {
+            (showSmallPic && smallPicUrl) ? <img className={styles.avatar} src={smallPicUrl} alt="" /> : null
+          }
+          <div className={styles.content}>
             <div className={styles.title}>{title}</div>
             <div className={styles.description}>{description}</div>
           </div>
         </div>
       </div>
-    );
+    </div>
+  );
   }
   
 export default Banner;

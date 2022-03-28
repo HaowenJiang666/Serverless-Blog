@@ -1,36 +1,49 @@
 .banner{
     position: relative;
-    height: 800px; // modify the size of the frame (including title, description, avatar...)
-    background-image: url('https://serverless-project-static-files-2.oss-us-west-1.aliyuncs.com/images/bg.jpeg');
     background-repeat: no-repeat;
     background-size: contain;
+    padding-bottom: 160px;
     .person {
+        display: flex;
+        height: 160px;
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        height: 160px;
+        background: #FFF;
         .avatar {
-            position: absolute;
+            position: relative;
             top: -130px;
-            left: 50px;
+            margin-left: 50px;
             width: 280px;
             height: 280px;
             border-radius: 20px;
         }
-        .title {
-            line-height: 50px;
-            margin-top: 10px;
-            margin-left: 380px;
-            font-size: 28px;
-            color: #000;
-        }
-        .description {
-            line-height: 32px;// line height of description
-            margin-right: 30px;
-            margin-left: 380px;
-            font-size: 18px;
-            color: #333;
+        .content{
+            flex: 1;
+            .title {
+                overflow: hidden;
+                height: 50px;
+                line-height: 50px;
+                margin-top: 10px;
+                margin-left: 30px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: 28px;
+                color: #000;
+            }
+            .description {
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3;
+                height: 70px;
+                line-height: 24px;// line height of description
+                margin-right: 30px;
+                margin-left: 30px;
+                font-size: 18px;
+                color: #333;
+            }
         }
     }
 }
