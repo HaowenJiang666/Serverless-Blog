@@ -21,8 +21,8 @@ const Banner = (props) => {
     }
 
     return (
-    <div>
-        <div className={styles.row}>
+    <div className={styles.wrapper}>
+        <div className={styles['attribute-row']}>
             <span className={styles.label}>Blog Title</span>
             <Input 
                 value={title} 
@@ -31,7 +31,7 @@ const Banner = (props) => {
                 onChange={(e) => {changeAttributes({ title: e.target.value })}}
             />
         </div>
-        <div className={styles.row}>
+        <div className={styles['attribute-row']}>
             <span className={styles.label}>Description</span>
             <TextArea 
                 value={description}
@@ -41,13 +41,13 @@ const Banner = (props) => {
                 onChange={(e) => {changeAttributes({ description: e.target.value })}}
             />
         </div>
-        <div className={styles.row}>
+        <div className={styles['attribute-row']}>
             <span className={styles.label}>Show Image</span>
             <Switch checked={showSmallPic} onChange={handleShowSmallPicChange}/>
         </div>
         {
             showSmallPic ? (
-                <div className={styles.row}>
+                <div className={styles['attribute-row']}>
                     <span className={styles.label}>Image URL</span>
                     <Input 
                         value={smallPicUrl} 
@@ -58,7 +58,7 @@ const Banner = (props) => {
                 </div>
             ) : null
         }
-        <div className={styles.row}>
+        <div className={styles['attribute-row']}>
             <span className={styles.label}>Background URL</span>
             <Input 
                 value={backgroundUrl} 
@@ -67,7 +67,7 @@ const Banner = (props) => {
                 onChange={(e) => {changeAttributes({ backgroundUrl: e.target.value })}}
             />
         </div>
-        <div className={styles.row}>
+        <div className={styles['attribute-row']}>
             <span className={styles.label}>Background Height</span>
             <Input 
                 type="number"

@@ -7,9 +7,14 @@
     .item{
         width: 50%;// modify the interval of the list
         margin-top: 10px;
-        .img{// can choose to fix all the propotion of the imgs
+        .link{
+            color: #333;
+            text-decoration: none;
+        }
+        .img{// can choose to fix all the proportion of the images
             display: block;
             margin: 0 auto;
+            border-radius: 10px;
         }
         .title{// modify the title 
             overflow: hidden;
