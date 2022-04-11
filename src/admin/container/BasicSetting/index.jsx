@@ -1,9 +1,9 @@
+import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Input } from 'antd';
 import { parseJsonByString } from '../../../common/utils'
-import AreaList from './component/AreaList';
 import styles from './style.module.scss'
-import { getChangeSchemaAction } from '../../store/action';
+import { getChangeSchemaAction, getChangePageAttributeAction } from '../../store/action';
 import { ExclamationCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 const useStore = () => {
@@ -12,11 +12,16 @@ const useStore = () => {
   const changeSchema = (schema) => {
     dispatch(getChangeSchemaAction(schema));
   }
-  return { schema, changeSchema }; 
+  const changePageAttribute = (key, value) => {
+    dispatch(getChangePageAttributeAction(key, value))
+  }
+  return { schema, changeSchema, changePageAttribute }; 
 }
 
-const HomeManagement = () => {
-  const { schema, changeSchema } = useStore();
+const BasicSetting = () => {
+  const { schema = {}, changeSchema, changePageAttribute } = useStore();
+  const { attributes = {} } = schema; 
+  const { title = '' } = attributes;
   const { confirm } = Modal;
 
   const handleSaveBtnClick = () => {
@@ -24,9 +29,12 @@ const HomeManagement = () => {
   }
 
   const handleResetBtnClick = () => {
-    // action -> reducer -> redux change 
      changeSchema(parseJsonByString(window.localStorage.schema, {})) 
   }
+
+  const handleTitleChange = useCallback((e) => {
+    changePageAttribute('title', e.target.value);
+  }, [changePageAttribute]);
 
   function showConfirm() {
     confirm({
@@ -55,13 +63,18 @@ const HomeManagement = () => {
 
   return (
     <div>
-      <AreaList />
+        <div className={styles.row}>
+            <div className={styles.title}>Page Title:</div>
+            <div className={styles.content}>
+                <Input value={title} onChange={handleTitleChange}/>
+            </div>
+        </div>
       <div className={styles.buttons}>
-        <Button type="primary" onClick={showConfirm}>Save Block Configuration</Button>
-        <Button type="primary" className={styles.reset} onClick={showPromiseConfirm}>Reset Block Configuration</Button>
+        <Button type="primary" onClick={showConfirm}>Save Basic Configuration</Button>
+        <Button type="primary" className={styles.reset} onClick={showPromiseConfirm}>Reset Basic Configuration</Button>
       </div>
     </div>
   );
 }
 
-export default HomeManagement;
+export default BasicSetting;

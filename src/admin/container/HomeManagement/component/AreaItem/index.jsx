@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, Modal, Select } from 'antd';
 import { SortableElement } from 'react-sortable-hoc';
 import { cloneDeep } from 'lodash'
-import { getChangePageChildAction, getDeletePageChildAction } from '../../store/action';
+import { getChangePageChildAction, getDeletePageChildAction } from '../../../../store/action';
 import Banner from './component/Banner';
 import List from './component/List';
 import Footer from './component/Footer'
@@ -16,7 +16,7 @@ const map = { Banner, List, Footer }
 
 const useStore = (index) => {
     const dispatch = useDispatch();
-    const pageChild = useSelector((state) => state.homeManagement.schema.children?.[index] || []);
+    const pageChild = useSelector((state) => state.common.schema.children?.[index] || []);
     const changePageChild = (temp) => { dispatch(getChangePageChildAction(index, temp)) }
     const removePageChild = () => { dispatch(getDeletePageChildAction(index)) }
     return { pageChild, changePageChild , removePageChild}; 
