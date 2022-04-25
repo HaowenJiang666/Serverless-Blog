@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { getChangeSchemaAction } from './store/action';
+import { Provider, useDispatch } from 'react-redux';
 import { Layout, Menu } from 'antd';
-import { Provider } from 'react-redux';
-import HomeManagement from './container/HomeManagement'
+import { parseJsonByString } from '../common/utils';
+import HomeManagement from './container/HomeManagement';
 import BasicSetting from './container/BasicSetting';
 import store from './store';
+import axios from 'axios';
+import Login from './container/Login';
 import styles from './style.module.scss';
 
 import 'normalize.css';
@@ -20,11 +24,29 @@ const useCollapsed = () => {
   return { collapsed, toggleCollapsed }
 }
 
+const useStore = () => {
+  const dispatch = useDispatch();
+  const changeSchema = (schema) => {
+    dispatch(getChangeSchemaAction(schema));
+  }
+  return { changeSchema }; 
+}
+
+
 const Wrapper = () => {
   const handleHomePageRedirect = () => {window.location.href = "/"}
   const { collapsed, toggleCollapsed } = useCollapsed();
+  const { changeSchema } = useStore();
+  const token = window.localStorage.token;
 
-  return (
+  useEffect(() => {
+    axios.get('/api/schema/getLatestOne').then((response) => {
+      const data = response?.data?.data;
+      data && changeSchema(parseJsonByString(data.schema, {}));
+    });
+  }, [changeSchema]);
+
+  return token ? (
     <Router>
       <Layout>
         <Sider className={styles.sidebar} trigger={null} collapsible collapsed={collapsed}>
@@ -64,7 +86,7 @@ const Wrapper = () => {
         </Layout>
       </Layout>
     </Router>
-  )
+  ): <Login />
 }
 
 ReactDOM.render(

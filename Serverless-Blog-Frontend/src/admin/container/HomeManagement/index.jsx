@@ -3,6 +3,7 @@ import { Button, Modal } from 'antd';
 import { parseJsonByString } from '../../../common/utils'
 import AreaList from './component/AreaList';
 import styles from './style.module.scss'
+import axios from 'axios';
 import { getChangeSchemaAction } from '../../store/action';
 import { ExclamationCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
@@ -20,12 +21,19 @@ const HomeManagement = () => {
   const { confirm } = Modal;
 
   const handleSaveBtnClick = () => {
-    window.localStorage.schema = JSON.stringify(schema);
+    const { token } = window.localStorage;
+    axios.post('/api/schema/save', {
+      schema: JSON.stringify(schema)
+    }, {
+      headers: { token }
+    }).then(() => {});
   }
 
   const handleResetBtnClick = () => {
-    // action -> reducer -> redux change 
-     changeSchema(parseJsonByString(window.localStorage.schema, {})) 
+    axios.get('/api/schema/getLatestOne').then((response) => {
+      const data = response?.data?.data;
+      data && changeSchema(parseJsonByString(data.schema, {}));
+    }); 
   }
 
   function showConfirm() {

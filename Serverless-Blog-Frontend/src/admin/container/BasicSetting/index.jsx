@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, Modal, Input } from 'antd';
 import { parseJsonByString } from '../../../common/utils'
 import styles from './style.module.scss'
+import axios from 'axios';
 import { getChangeSchemaAction, getChangePageAttributeAction } from '../../store/action';
 import { ExclamationCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
@@ -25,11 +26,19 @@ const BasicSetting = () => {
   const { confirm } = Modal;
 
   const handleSaveBtnClick = () => {
-    window.localStorage.schema = JSON.stringify(schema);
+    const { token } = window.localStorage;
+    axios.post('/api/schema/save', {
+      schema: JSON.stringify(schema)
+    }, {
+      headers: { token }
+    }).then(() => {});
   }
 
   const handleResetBtnClick = () => {
-     changeSchema(parseJsonByString(window.localStorage.schema, {})) 
+    axios.get('/api/schema/getLatestOne').then((response) => {
+      const data = response?.data?.data;
+      data && changeSchema(parseJsonByString(data.schema, {}));
+    });
   }
 
   const handleTitleChange = useCallback((e) => {
