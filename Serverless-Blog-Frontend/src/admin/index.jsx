@@ -7,6 +7,7 @@ import { Layout, Menu } from 'antd';
 import { parseJsonByString } from '../common/utils';
 import HomeManagement from './container/HomeManagement';
 import BasicSetting from './container/BasicSetting';
+import Search from './container/Search';
 import store from './store';
 import axios from 'axios';
 import Login from './container/Login';
@@ -62,7 +63,9 @@ const Wrapper = () => {
               </Link>
             </Menu.Item>
             <Menu.Item key="admin-search">
-              <span className="iconfont">&#xe8ef;</span>{ collapsed ? "" : "Search For Content"}
+              <Link to="/search">
+                <span className="iconfont">&#xe8ef;</span>{ collapsed ? "" : "Search For Content"}
+              </Link>
             </Menu.Item>
             <Menu.Item key="admin-back" onClick={handleHomePageRedirect}>
               <span className="iconfont">&#xe666;</span>{ collapsed ? "" : "Back To User Page"}
@@ -81,6 +84,7 @@ const Wrapper = () => {
             <Switch>
               <Route path='/' component={HomeManagement} exact />
               <Route path='/setting' component={BasicSetting} exact />
+              <Route path='/search' component={Search} exact />
             </Switch>
           </Content>
         </Layout>

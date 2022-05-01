@@ -11,10 +11,28 @@
 
 .buttons{
     padding-top: 20px;
+    padding-bottom: 20px;
     border-top: 1px dashed #CCC;
+    border-bottom: 1px dashed #CCC;
     margin: 10px auto;
     text-align: center;
     .reset{
         margin-left: 20px;
     }
+}
+
+.calender{
+    margin-left: auto;
+    margin-right: auto;
+    width: 1000px;
+    height: 600px;
+    border: 1px solid #f0f0f0;
+    border-radius: 2px;
+}
+
+.calendarTitle{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 25px;
+    text-align: center;
 }

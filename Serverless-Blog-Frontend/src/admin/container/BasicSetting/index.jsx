@@ -2,10 +2,11 @@ import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Modal, Input } from 'antd';
 import { parseJsonByString } from '../../../common/utils'
-import styles from './style.module.scss'
-import axios from 'axios';
 import { getChangeSchemaAction, getChangePageAttributeAction } from '../../store/action';
 import { ExclamationCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import styles from './style.module.scss'
+import axios from 'axios';
+import { Calendar } from 'antd';
 
 const useStore = () => {
   const dispatch = useDispatch();
@@ -72,15 +73,21 @@ const BasicSetting = () => {
 
   return (
     <div>
-        <div className={styles.row}>
-            <div className={styles.title}>Page Title:</div>
-            <div className={styles.content}>
-                <Input value={title} onChange={handleTitleChange}/>
-            </div>
-        </div>
+      <div className={styles.row}>
+          <div className={styles.title}>Page Title:</div>
+          <div className={styles.content}>
+              <Input value={title} onChange={handleTitleChange}/>
+          </div>
+      </div>
       <div className={styles.buttons}>
         <Button type="primary" onClick={showConfirm}>Save Basic Configuration</Button>
         <Button type="primary" className={styles.reset} onClick={showPromiseConfirm}>Reset Basic Configuration</Button>
+      </div>
+      <div className={styles.calendarTitle}>
+          Calender
+      </div>
+      <div className={styles.calender}>
+        <Calendar fullscreen={false} />
       </div>
     </div>
   );
